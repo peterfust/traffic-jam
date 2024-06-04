@@ -7,6 +7,7 @@ import time
 # Create a Spark session
 spark = SparkSession.builder \
     .appName("Traffic Jam") \
+    .master("local[*]") \
     .config("spark.jars.packages", "graphframes:graphframes:0.8.2-spark3.0-s_2.12") \
     .getOrCreate()
 
