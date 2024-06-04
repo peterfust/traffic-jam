@@ -8,22 +8,21 @@ import time
 spark = SparkSession.builder \
     .appName("Traffic Jam") \
     .master("local[*]") \
+    .config("spark.driver.host", "127.0.0.1") \
     .config("spark.jars.packages", "graphframes:graphframes:0.8.2-spark3.0-s_2.12") \
     .getOrCreate()
 
-# Define the initial vertices
+# Places from Zürich to Basel
 vertices = spark.createDataFrame([
-    ("A", "A"), ("B", "B"), ("C", "C"), ("D", "D"),
-    ("E", "E"), ("F", "F"), ("G", "G"), ("H", "H"),
-    ("I", "I"), ("Z", "Z")
+    ("ZUERICH", "ZUERICH"), ("BASEL", "BASEL"), ("AARAU", "AARAU"), ("OLTEN", "OLTEN"),
+    ("BADEN", "BADEN"), ("FRICK", "FRICK")
 ], ["id", "name"])
 
 # Define the initial edges with weights
 edges = spark.createDataFrame([
-    ("A", "B", 1), ("A", "C", 4), ("B", "C", 2), ("B", "D", 5),
-    ("C", "E", 1), ("D", "F", 3), ("E", "D", 1), ("E", "G", 2),
-    ("F", "H", 1), ("G", "F", 2), ("G", "I", 3), ("H", "Z", 1),
-    ("I", "H", 2), ("I", "Z", 4)
+    ("ZUERICH", "BADEN", 1), ("BADEN", "FRICK", 1), ("FRICK", "BASEL", 1), ("ZUERICH", "AARAU", 1),
+    ("AARAU", "FRICK", 1), ("FRICK", "BASEL", 1), ("ZUERICH", "AARAU", 1), ("AARAU", "EGERKINGEN", 1),
+    ("EGERKINGEN", "BASEL", 1)
 ], ["src", "dst", "weight"])
 
 # Create the initial graph

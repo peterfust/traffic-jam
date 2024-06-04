@@ -5,6 +5,7 @@ from graphframes import GraphFrame
 spark = SparkSession.builder \
     .appName("Shortest Path with GraphFrames") \
     .config("spark.jars.packages", "graphframes:graphframes:0.8.2-spark3.0-s_2.12") \
+    .config("spark.driver.host", "127.0.0.1") \
     .getOrCreate()
 
 # Define vertices
