@@ -35,3 +35,5 @@ results = graph.bfs(
 
 # Show the results
 results.show(truncate=False)
+
+spark.stop()
