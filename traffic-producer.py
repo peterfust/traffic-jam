@@ -1,5 +1,7 @@
+import math
 import socket
 import time
+from common_values import demo_edges
 
 class Netcat:
 
@@ -22,22 +24,42 @@ class Netcat:
     def close(self):
         self.socket.close()
 
-def send(nc):
-    # RUN ONLY 3 iterations per each window of 1 second to make sure that wordcount works as expected
-    i = 0
+
+def sinus_traffic_value(t, cl):
+    normalized_t = t / cl
+    sin_value = math.sin(2 * math.pi * normalized_t)
+    scaled_value = round(5 * (sin_value + 1))
+    return scaled_value
+
+
+curve_length = 100
+
+
+def send(producer):
+    varianz = 0
+    plus = True
     while True:
         try:
-            print("Sending iteration "+ str(i))
-            nc.write('A,B,12')
-            nc.write('B,C,4')
-            nc.write("C,D,6")
-            i+=1
-            if i == 3:
-                time.sleep(1)
-                i = 0
+            for i, location in enumerate(demo_edges):
+                value = sinus_traffic_value(varianz + i * curve_length / len(demo_edges), curve_length)
+                print(f"Der Stau zwischen {location[0]} und {location[1]} beträgt {value} min")
+                producer.write(f"{location[0]},{location[1]},{value}")
+                # 10 Sekunden warten für nächste Prognose
+                time.sleep(10)
+
+            # varianz verändern, damit es spannender wird, immer zwischen 0 → 24 → 0
+            if varianz == 24:
+                plus = False
+            elif varianz == 0:
+                plus = True
+            if plus:
+                varianz += 1
+            else:
+                varianz -= 1
         except Exception as e:
             print(str(e))
             break
+
 
 while True:
     nc = Netcat("127.0.0.1", 9999)
