@@ -2,7 +2,7 @@
 
 ## Projektbeschreibung
 Es soll ein Navigationssystem mit Staumeldung simuliert werden. 
-Dazu wird ein Graph-Netzwerk in Spark erstellt, welches 4 Wege von Zürich nach Basel kennt. 
+Dazu wird ein Graph-Netzwerk in Spark erstellt, welches 3 Wege von Zürich nach Basel kennt. 
 Diese Wege haben Zeitdauern hinterlegt, wie lange der Weg ohne Stau dauert.
 
 Der Staumelder meldet nun im 10 Sekunden abstand neue Staus auf den Wegen. Dabei wird immer

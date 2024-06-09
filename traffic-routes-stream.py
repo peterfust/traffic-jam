@@ -20,6 +20,7 @@ def calculate_and_print_route(row):
     for col in [c for c in row.asDict() if c.startswith('e')]:
         duration += row[col]['total_distance']
         path += f" -> ({row[col]['total_distance']}) -> {row[col]['dst']}"
+    path += f", Wegdauer: {duration}"
     print(path)
     return duration
 
