@@ -2,6 +2,8 @@ import math
 import socket
 import time
 from common_values import demo_edges
+import matplotlib.pyplot as plt
+import numpy as np
 
 class Netcat:
 
@@ -27,10 +29,18 @@ class Netcat:
 
 def sinus_traffic_value(t, cl):
     normalized_t = t / cl
-    sin_value = math.sin(2 * math.pi * normalized_t)
-    scaled_value = round(5 * (sin_value + 1))
-    return scaled_value
+    sin_value = math.sin( 2 * math.pi * normalized_t)
+    scaled_value = round(5 * (sin_value))
+    if scaled_value >= 0:
+        return scaled_value
+    return 0
 
+def plot_sinus_and_current_value(t_values, current_t, current_value):
+    sinus_values = [sinus_traffic_value(t, curve_length) for t in t_values]
+    plt.plot(t_values, sinus_values, label='Sinuskurve')
+    plt.scatter([current_t], [current_value], color='red')  # Markieren des aktuellen Werts
+    plt.legend()
+    plt.show()
 
 curve_length = 100
 
@@ -41,9 +51,12 @@ def send(producer):
     while True:
         try:
             for i, location in enumerate(demo_edges):
-                value = sinus_traffic_value(varianz + i * curve_length / len(demo_edges), curve_length)
+                current_t = varianz + i * curve_length / len(demo_edges)
+                value = sinus_traffic_value(current_t, curve_length)
                 print(f"Der Stau zwischen {location[0]} und {location[1]} beträgt {value} min")
                 producer.write(f"{location[0]},{location[1]},{value}")
+                t_values = np.arange(0, curve_length, 0.1)
+                plot_sinus_and_current_value(t_values, current_t, value)
                 # 10 Sekunden warten für nächste Prognose
                 time.sleep(10)
 
