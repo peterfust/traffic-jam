@@ -26,13 +26,14 @@ class Netcat:
     def close(self):
         self.socket.close()
 
+traffic_factor = 2
 
 def sinus_traffic_value(t, cl):
     normalized_t = t / cl
     sin_value = math.sin( 2 * math.pi * normalized_t)
     scaled_value = round(5 * (sin_value))
     if scaled_value >= 0:
-        return scaled_value
+        return scaled_value * traffic_factor
     return 0
 
 def plot_sinus_and_current_value(t_values, current_t, current_value):
